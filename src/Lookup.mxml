@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication title="Lookup" xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" showStatusBar="false" minWidth="408" minHeight="608" creationComplete="init();">
+
+	<mx:Style source="Lookup.css"/>
+
+	<mx:Script source="Lookup.as"/>
+
+	<mx:VBox width="100%" height="100%" paddingLeft="4" paddingTop="4" paddingRight="4" paddingBottom="4">
+		<mx:HBox width="100%" horizontalAlign="center">
+			<mx:Button label="Back" id="backButton" enabled="false"/>
+			<mx:Button label="Forward" id="forwardButton" enabled="false"/>
+			<mx:Button label="History" id="historyButton" enabled="false"/>
+			<mx:Button label="Preferences" id="preferencesButton" enabled="true"/>
+		</mx:HBox>
+		<mx:ComboBox id="databaseList" dataProvider="{this.databases}" labelField="description" styleName="databaseList" width="100%"/>
+		<mx:TextInput id="termInput" styleName="termInput" editable="true" width="100%" focusIn="this.termInput.selectionBeginIndex = 0; this.termInput.selectionEndIndex = this.termInput.text.length;"/>
+		<mx:ViewStack id="views" creationPolicy="all" width="100%" height="100%">
+			<mx:Canvas id="matchView" width="100%" height="100%">
+				<mx:VBox width="100%" height="100%">
+					<mx:ViewStack id="progressViews" creationPolicy="all" width="100%">
+						<mx:Canvas id="progressText" width="100%">
+							<mx:Label width="100%" height="20" id="resultText" styleName="resultText" text="Enter a search term"/>
+						</mx:Canvas>
+						<mx:Canvas id="progressBar" width="100%">
+							<mx:ProgressBar id="loadingBar" width="100%" height="15" indeterminate="true" label="Searching..." labelPlacement="center"/>
+						</mx:Canvas>
+					</mx:ViewStack>
+					<mx:List id="matchList" dataProvider="{matches}" width="100%" height="100%"/>
+				</mx:VBox>
+			</mx:Canvas>
+			<mx:Canvas id="definitionView" width="100%" height="100%">
+				<mx:TextArea id="definition" styleName="definition" width="100%" height="100%" editable="false"/>
+			</mx:Canvas>
+			<mx:Canvas id="historyView" width="100%" height="100%">
+				<mx:List id="historyList" dataProvider="{history}" labelField="term" width="100%" height="100%"/>
+			</mx:Canvas>
+			<mx:TabNavigator id="configView" width="100%" height="100%" historyManagementEnabled="false" horizontalAlign="center">
+				<mx:Form label="Server">
+					<mx:FormHeading label="Choose a server below." width="100%"/>
+					<mx:FormItem label="Server:">
+						<mx:ComboBox id="serverList" width="250" dataProvider="{servers}" labelField="server"/>
+					</mx:FormItem>
+					<mx:FormItem label="Description:">
+						<mx:TextArea id="serverDescription" editable="false" width="250" height="100"/>
+					</mx:FormItem>
+					<mx:FormItem label="Short list:">
+						<mx:CheckBox id="shortListBox" selected="{shortDatabaseList}"/>
+					</mx:FormItem>
+					<mx:HBox horizontalAlign="center" width="100%">
+						<mx:Button label="Cancel" click="this.views.selectedChild=matchView"/>
+						<mx:Button label="Save" click="saveConfiguration(event);"/>
+					</mx:HBox>
+				</mx:Form>
+				<mx:Form label="Proxy">
+					<mx:FormHeading label="Enter proxy settings below." width="100%"/>
+					<mx:FormItem label="Proxy Server:" required="true">
+						<mx:TextInput id="proxyServerInput" width="250" text="{this.proxyServer}" change="validateProxySettings(event);"/>
+					</mx:FormItem>
+					<mx:FormItem label="Proxy Port:" required="true">
+						<mx:TextInput id="proxyPortInput" width="75" text="{this.proxyPort}" change="validateProxySettings(event);"/>
+					</mx:FormItem>
+					<mx:FormItem label="Active:" required="false">
+						<mx:CheckBox id="proxyActiveInput" selected="{this.proxyActive}"/>
+					</mx:FormItem>
+					<mx:HBox horizontalAlign="center" width="100%">
+						<mx:Button label="Cancel" click="this.views.selectedChild=matchView"/>
+						<mx:Button label="Connect" id="connectButton" click="saveProxySettings(event);"/>
+					</mx:HBox>
+				</mx:Form>
+			</mx:TabNavigator>
+		</mx:ViewStack>
+	</mx:VBox>
+</mx:WindowedApplication>

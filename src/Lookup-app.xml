@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<application xmlns="http://ns.adobe.com/air/application/1.5">
+
+	<id>Lookup</id>
+	<filename>Lookup</filename>
+	<name>Lookup</name>
+	<version>v1</version>
+	<description>Lookup words in online dictionaries. Written by Christian Cantrell.</description>
+
+	<copyright>Copyright © 2008 Adobe Systems Incorporated. All rights reserved.</copyright>
+
+	<initialWindow>
+		<content>[This value will be overwritten by Flex Builder in the output app.xml]</content>
+
+		<systemChrome>none</systemChrome>
+		<transparent>true</transparent>
+		<visible>false</visible>
+	</initialWindow>
+
+	<installFolder>AIR Examples</installFolder>
+	<programMenuFolder>AIR Examples</programMenuFolder>
+
+	<icon>
+		<image128x128>icons/ApolloApp_128.png</image128x128>
+	</icon>
+
+</application>
