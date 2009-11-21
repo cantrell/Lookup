@@ -1,0 +1,7 @@
+An dict protocol client. Allows you to look things up in multiple online dictionaries and other resources.
+
+Dependencies include:
+
+http://code.google.com/p/as3corelib/
+
+Written by Christian Cantrell.
