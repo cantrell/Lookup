@@ -14,34 +14,35 @@ import mx.events.CloseEvent;
 import flash.display.NativeWindow;
 import flash.geom.Point;
 
-private var dict:Dict;
-private var connectingDialog:ConnectingDialog;
-private var currentServer:DictionaryServer;
+var dict:Dict;
+var connectingDialog:ConnectingDialog;
+var currentServer:DictionaryServer;
 [Bindable]
-private var servers:ArrayCollection = new ArrayCollection();
-[Bindable]
-private var databases:ArrayCollection = new ArrayCollection();
-[Bindable]
-private var matches:ArrayCollection = new ArrayCollection();
-[Bindable]
-private var shortDatabaseList:Boolean;
-private var matchStrategy:String;
-[Bindable]
-private var history:ArrayCollection;
-private var historyIndex:int;
-[Bindable]
-private var proxyServer:String = "";
-[Bindable]
-private var proxyPort:uint = 0;
-[Bindable]
-private var proxyActive:Boolean = false;
-private var prefs:SharedObject;
+var servers:ArrayCollection = new ArrayCollection();
 
-private var definitionFont:String = "Arial";
-private var linkColor:String = "0000ff";
-private var fontSize:String = "12";
+[Bindable]
+ var databases:ArrayCollection = new ArrayCollection();
+[Bindable]
+ var matches:ArrayCollection = new ArrayCollection();
+[Bindable]
+ var shortDatabaseList:Boolean;
+ var matchStrategy:String;
+[Bindable]
+ var history:ArrayCollection;
+ var historyIndex:int;
+[Bindable]
+ var proxyServer:String = "";
+[Bindable]
+ var proxyPort:uint = 0;
+[Bindable]
+ var proxyActive:Boolean = false;
+ var prefs:SharedObject;
 
-private function init():void
+ var definitionFont:String = "Arial";
+ var linkColor:String = "0000ff";
+ var fontSize:String = "12";
+
+ function init():void
 {
 	// Configure the window.
 	var win:NativeWindow = this.nativeWindow;
@@ -63,7 +64,7 @@ private function init():void
 	dict.getServers();
 }
 
-private function configureEventListeners():void
+ function configureEventListeners():void
 {
 	// For the Dict object.
 	dict.addEventListener(Dict.CONNECTED, connected);
@@ -90,7 +91,7 @@ private function configureEventListeners():void
 	serverList.addEventListener(Event.CHANGE, onServerSelect);
 }
 
-private function configurePreferences():void
+ function configurePreferences():void
 {
 	prefs = SharedObject.getLocal("cantrell.lookup.preferences.proxy");
 	if (prefs.data.proxyServer != undefined)
@@ -101,7 +102,7 @@ private function configurePreferences():void
 	}	
 }
 
-private function initiateConnection(e:CloseEvent=null):void
+ function initiateConnection(e:CloseEvent=null):void
 {
 	PopUpManager.addPopUp(this.connectingDialog, this, true);
 	PopUpManager.centerPopUp(this.connectingDialog);
@@ -132,7 +133,7 @@ private function initiateConnection(e:CloseEvent=null):void
 	this.resultText.text = "Enter a search term";
 }
 
-private function onServerSelect(event:Event):void
+ function onServerSelect(event:Event):void
 {
 	var desc:String = this.serverList.selectedItem.description;
 	desc = this.cleanUpHTML(desc);
@@ -142,7 +143,7 @@ private function onServerSelect(event:Event):void
 	this.closeFont('serverDescription');
 }
 
-private function onTextInput(event:Event):void
+ function onTextInput(event:Event):void
 {
 	if (views.selectedChild != matchView)
 	{
@@ -161,7 +162,7 @@ private function onTextInput(event:Event):void
 	}
 }
 
-private function lookUpWordFromHyperlink(event:TextEvent):void
+ function lookUpWordFromHyperlink(event:TextEvent):void
 {
 	var term:String = unescape(event.text);
 	if (term != termInput.text)
@@ -172,7 +173,7 @@ private function lookUpWordFromHyperlink(event:TextEvent):void
 	this.lookUpWord(term);
 }
 
-private function lookUpWordFromList(event:Event):void
+ function lookUpWordFromList(event:Event):void
 {
 	var term:String = this.matchList.selectedItem as String;
 	if (term != termInput.text)
@@ -186,7 +187,7 @@ private function lookUpWordFromList(event:Event):void
 	this.matches.removeAll();
 }
 
-private function lookUpFromHistory(event:Event):void
+ function lookUpFromHistory(event:Event):void
 {
 	this.historyIndex = this.historyList.selectedIndex;
 	this.updateSearchUI();
@@ -194,7 +195,7 @@ private function lookUpFromHistory(event:Event):void
 	//this.views.selectedChild = definitionView;
 }
 
-private function lookUpWord(term:String):void
+ function lookUpWord(term:String):void
 {
 	CursorManager.setBusyCursor();
 	var db:String = this.databaseList.selectedItem.name;
@@ -220,7 +221,7 @@ private function lookUpWord(term:String):void
 	}
 }
 
-private function createHistoryEntry(term:String):void
+ function createHistoryEntry(term:String):void
 {
 	var db:Database = this.databaseList.selectedItem as Database;
 	this.historyIndex++;
@@ -231,43 +232,43 @@ private function createHistoryEntry(term:String):void
 	}
 }
 
-private function forward(event:Event):void
+ function forward(event:Event):void
 {
 	this.historyIndex++;
 	this.updateSearchUI();
 	this.lookUpWord(this.termInput.text);
 }
 
-private function back(event:Event):void
+ function back(event:Event):void
 {
 	this.historyIndex--;
 	this.updateSearchUI();
 	this.lookUpWord(this.termInput.text);
 }
 
-private function showHistory(event:Event):void
+ function showHistory(event:Event):void
 {
 	this.views.selectedChild = historyView;
 }
 
-private function showConfig(event:Event):void
+ function showConfig(event:Event):void
 {
 	this.views.selectedChild = configView;
 }
 
-private function updateSearchUI():void
+ function updateSearchUI():void
 {
 	var historyEntry:Object = this.history.getItemAt(this.historyIndex);
 	this.databaseList.selectedItem = historyEntry.db;
 	this.termInput.text = historyEntry.term;				
 }
 
-private function connected(event:Event):void
+ function connected(event:Event):void
 {
 	this.dict.getDatabases(this.shortDatabaseList);
 }
 
-private function disconnected(event:Event):void
+ function disconnected(event:Event):void
 {
 	Alert.show("Your connection has been lost. Click OK to reconnect.",
 			   "Connection Lost",
@@ -276,7 +277,7 @@ private function disconnected(event:Event):void
 			   this.initiateConnection);
 }
 
-private function incomingDatabases(event:DatabaseEvent):void
+ function incomingDatabases(event:DatabaseEvent):void
 {
 	var databases:Array = event.databases;
 	this.databases.source = databases;
@@ -294,12 +295,12 @@ private function incomingDatabases(event:DatabaseEvent):void
 	this.termInput.setSelection(0, this.termInput.length);
 }
 
-private function incomingMatchStrategies(event:MatchStrategiesEvent):void
+ function incomingMatchStrategies(event:MatchStrategiesEvent):void
 {
 	// Alternate match strategies not supported at this time.
 }
 
-private function incomingMatches(event:MatchEvent):void
+ function incomingMatches(event:MatchEvent):void
 {
 	var store:Dictionary = new Dictionary();
 	var uniqueMatches:Array = event.matches.filter(
@@ -317,14 +318,14 @@ private function incomingMatches(event:MatchEvent):void
 	showLoadingBar(false);
 }
 
-private function incomingDefinitionHeader(event:DefinitionHeaderEvent):void
+ function incomingDefinitionHeader(event:DefinitionHeaderEvent):void
 {
 	definition.htmlText = "";
 	definition.verticalScrollPosition = 0;
 	CursorManager.removeBusyCursor();
 }
 
-private function incomingDefinition(event:DefinitionEvent):void
+ function incomingDefinition(event:DefinitionEvent):void
 {
 	var def:Definition = event.definition;
 	var defString:String = def.definition;
@@ -344,7 +345,7 @@ private function incomingDefinition(event:DefinitionEvent):void
 	closeFont('definition');
 }
 
-private function incomingServers(event:DictionaryServerEvent):void
+ function incomingServers(event:DictionaryServerEvent):void
 {
 	this.currentServer = event.servers[0] as DictionaryServer;
 	this.servers.source = event.servers;
@@ -352,21 +353,21 @@ private function incomingServers(event:DictionaryServerEvent):void
 	this.initiateConnection();
 }
 
-private function incomingIOError(event:IOErrorEvent):void
+ function incomingIOError(event:IOErrorEvent):void
 {
 	this.showLoadingBar(false);
 	PopUpManager.removePopUp(this.connectingDialog);
 	Alert.show("You either don't have an Internet connection, or you need to configure a proxy to get through your firewall. Click the Preferences button to configure a proxy.", "Connection failed", Alert.OK);
 }
 
-private function noMatches(event:NoMatchEvent):void
+ function noMatches(event:NoMatchEvent):void
 {
 	showLoadingBar(false);
 	this.matches.removeAll();
 	this.resultText.text = "No matches found.";
 }
 
-private function showLoadingBar(show:Boolean):void
+ function showLoadingBar(show:Boolean):void
 {
 	if (show)
 	{
@@ -380,14 +381,14 @@ private function showLoadingBar(show:Boolean):void
 	}
 }
 
-private function saveConfiguration(event:Event):void
+ function saveConfiguration(event:Event):void
 {
 	this.currentServer = this.serverList.selectedItem as DictionaryServer;
 	this.shortDatabaseList = this.shortListBox.selected;
 	this.initiateConnection();
 }
 
-private function saveProxySettings(event:Event):void
+ function saveProxySettings(event:Event):void
 {
 	this.proxyServer = this.proxyServerInput.text;
 	this.proxyPort = uint(this.proxyPortInput.text);
@@ -399,7 +400,7 @@ private function saveProxySettings(event:Event):void
 	this.initiateConnection();
 }
 
-private function validateProxySettings(event:Event):void
+ function validateProxySettings(event:Event):void
 {
 	/*
 	if (this.proxyServerValidator.validate(null, true).type == ValidationResultEvent.VALID &&
@@ -415,7 +416,7 @@ private function validateProxySettings(event:Event):void
 	*/
 }
 
-private function cleanUpHTML(html:String):String
+ function cleanUpHTML(html:String):String
 {
 	html = html.replace(/\r|\t/g, ""); // Get rid of \r's
 	html = html.replace(/[ ]{2,}/g, ""); // Get rid of consecutive whitespace and tabs
@@ -423,18 +424,18 @@ private function cleanUpHTML(html:String):String
 	return html;
 }
 
-private function hyperlink(href:String):String
+ function hyperlink(href:String):String
 {
 	href = href.replace(/\{|\}/g, "");
 	return "<a href='event:"+escape(href)+"'><font color='#"+this.linkColor+"' face='"+this.definitionFont+"'><u>"+href+"</u></font></a>";
 }
 
-private function openFont(textAreaName:String):void
+ function openFont(textAreaName:String):void
 {
 	this[textAreaName].htmlText += "<font size='"+this.fontSize+"' face='"+this.definitionFont+"'>";
 }
 
-private function closeFont(textAreaName:String):void
+ function closeFont(textAreaName:String):void
 {
 	this[textAreaName].htmlText += "</font>";
 }
